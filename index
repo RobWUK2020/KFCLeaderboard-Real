@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KFC Bracknell Leaderboard</title>
+    <style>
+        /* KFC Branding Variables */
+        :root {
+            --kfc-red: #E4002B;
+            --kfc-dark-red: #A3001E;
+            --kfc-white: #FFFFFF;
+            --kfc-black: #000000;
+            --bg-light: #F4F4F4;
+            --text-dark: #333333;
+            --text-gray: #666666;
+            --gold: #FFD700;
+            --silver: #C0C0C0;
+            --bronze: #CD7F32;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        /* App Container */
+        .app-container {
+            width: 100%;
+            max-width: 400px;
+            background-color: var(--kfc-white);
+            min-height: 80vh;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--kfc-black); /* Dark theme for Stranger Things vibe */
+            color: var(--kfc-white);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 5px solid var(--kfc-red);
+        }
+
+        .header-subtitle {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--kfc-red);
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        header h1 {
+            font-size: 1.4rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            font-size: 0.85rem;
+            color: #aaa;
+            margin-top: 5px;
+        }
+
+        /* Navigation Tabs (Small Buttons) */
+        .tab-nav {
+            display: flex;
+            background-color: var(--kfc-white);
+            padding: 10px;
+            gap: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 8px 4px;
+            font-size: 0.75rem; /* Small buttons */
+            font-weight: bold;
+            text-transform: uppercase;
+            border: 2px solid transparent;
+            border-radius: 4px;
+            background-color: var(--bg-light);
+            color: var(--text-gray);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .tab-btn.active {
+            background-color: var(--kfc-red);
+            color: var(--kfc-white);
+            border-color: var(--kfc-dark-red);
+        }
+
+        /* Main Content Area */
+        main {
+            padding: 15px;
+            flex-grow: 1;
+            background-color: var(--bg-light);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--kfc-black);
+            margin-bottom: 15px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        /* Leaderboard List Items */
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .rank-card {
+            background-color: var(--kfc-white);
+            border-radius: 6px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+
+        .rank-number {
+            font-size: 1.2rem;
+            font-weight: 900;
+            width: 30px;
+            color: var(--text-gray);
+        }
+
+        /* Medals for Top 3 */
+        .rank-1 .rank-number { color: var(--gold); font-size: 1.4rem; }
+        .rank-2 .rank-number { color: var(--silver); font-size: 1.3rem; }
+        .rank-3 .rank-number { color: var(--bronze); font-size: 1.2rem; }
+
+        .rank-2 {
+            border-left: 4px solid var(--kfc-red);
+            background-color: #fff9fa; /* Slight highlight for Patrick */
+        }
+
+        .team-member {
+            flex-grow: 1;
+            padding-left: 10px;
+        }
+
+        .team-member h4 {
+            font-size: 1rem;
+            color: var(--kfc-black);
+            margin-bottom: 2px;
+        }
+
+        .team-member p {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+        }
+
+        .metric-score {
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: var(--kfc-red);
+            text-align: right;
+        }
+
+        /* Shift vs Shift Display */
+        .vs-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .shift-card {
+            background-color: var(--kfc-white);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 2px solid transparent;
+        }
+
+        .shift-card.winner {
+            border-color: var(--kfc-red);
+            background-color: #fff9fa;
+        }
+
+        .shift-name {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: var(--kfc-black);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .shift-alias {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .shift-score {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--kfc-red);
+        }
+
+        .vs-divider {
+            text-align: center;
+            font-weight: 900;
+            color: var(--text-gray);
+            font-size: 1.2rem;
+        }
+
+        /* Prize Footer */
+        .prize-banner {
+            background-color: var(--kfc-black);
+            color: var(--kfc-white);
+            padding: 15px;
+            text-align: center;
+            border-top: 3px solid var(--kfc-red);
+        }
+
+        .prize-banner h3 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: var(--kfc-red);
+            margin-bottom: 5px;
+        }
+
+        .prize-banner p {
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <header>
+            <div class="header-subtitle">KFC Bracknell</div>
+            <h1>Hellfire Club Promo</h1>
+            <p>Demogorgon Bucket Weekly Tracker</p>
+        </header>
+
+        <nav class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('tab-attachment')">Attach %</button>
+            <button class="tab-btn" onclick="switchTab('tab-volume')">Volume #</button>
+            <button class="tab-btn" onclick="switchTab('tab-shift')">Shift vs Shift</button>
+        </nav>
+
+        <main>
+            <div id="tab-attachment" class="tab-content active">
+                <h2 class="section-title">Attachment Rate</h2>
+                <div class="leaderboard-list">
+                    <div class="rank-card rank-1">
+                        <div class="rank-number">1</div>
+                        <div class="team-member">
+                            <h4>Sarah Mitchell</h4>
+                            <p>Front Counter</p>
+                        </div>
+                        <div class="metric-score">14.2%</div>
+                    </div>
+                    
+                    <div class="rank-card rank-2">
+                        <div class="rank-number">2</div>
+                        <div class="team-member">
+                            <h4>Patrick Anderson</h4>
+                            <p>Drive-Thru Window</p>
+                        </div>
+                        <div class="metric-score">12.5%</div>
+                    </div>
+
+                    <div class="rank-card rank-3">
+                        <div class="rank-number">3</div>
+                        <div class="team-member">
+                            <h4>David Taylor</h4>
+                            <p>Front Counter</p>
+                        </div>
+                        <div class="metric-score">11.0%</div>
+                    </div>
+
+                    <div class="rank-card">
+                        <div class="rank-number">4</div>
+                        <div class="team-member">
+                            <h4>Emma White</h4>
+                            <p>Drive-Thru Window</p>
+                        </div>
+                        <div class="metric-score">9.5%</div>
+                    </div>
+
+                    <div class="rank-card">
+                        <div class="rank-number">5</div>
+                        <div class="team-member">
+                            <h4>James Lewis</h4>
+                            <p>Front Counter</p>
+                        </div>
+                        <div class="metric-score">8.8%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-volume" class="tab-content">
+                <h2 class="section-title">Total Promo Volume</h2>
+                <div class="leaderboard-list">
+                    <div class="rank-card rank-1">
+                        <div class="rank-number">1</div>
+                        <div class="team-member">
+                            <h4>Sarah Mitchell</h4>
+                            <p>Front Counter</p>
+                        </div>
+                        <div class="metric-score">48</div>
+                    </div>
+                    
+                    <div class="rank-card rank-2">
+                        <div class="rank-number">2</div>
+                        <div class="team-member">
+                            <h4>Patrick Anderson</h4>
+                            <p>Drive-Thru Window</p>
+                        </div>
+                        <div class="metric-score">43</div>
+                    </div>
+
+                    <div class="rank-card rank-3">
+                        <div class="rank-number">3</div>
+                        <div class="team-member">
+                            <h4>James Lewis</h4>
+                            <p>Front Counter</p>
+                        </div>
+                        <div class="metric-score">38</div>
+                    </div>
+
+                    <div class="rank-card">
+                        <div class="rank-number">4</div>
+                        <div class="team-member">
+                            <h4>Emma White</h4>
+                            <p>Drive-Thru Window</p>
+                        </div>
+                        <div class="metric-score">31</div>
+                    </div>
+
+                    <div class="rank-card">
+                        <div class="rank-number">5</div>
+                        <div class="team-member">
+                            <h4>David Taylor</h4>
+                            <p>Front Counter</p>
+                        </div>
+                        <div class="metric-score">27</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-shift" class="tab-content">
+                <h2 class="section-title">Day vs Night Shift</h2>
+                <div class="vs-container">
+                    
+                    <div class="shift-card">
+                        <div class="shift-name">Day Shift</div>
+                        <div class="shift-alias">"The Hawkins Openers"</div>
+                        <div class="shift-score">152</div>
+                    </div>
+
+                    <div class="vs-divider">VS</div>
+
+                    <div class="shift-card winner">
+                        <div class="shift-name">Night Shift</div>
+                        <div class="shift-alias">"The Upside Down Closers"</div>
+                        <div class="shift-score">185</div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+
+        <div class="prize-banner">
+            <h3>🏆 Weekly Prize 🏆</h3>
+            <p>1st Place wins a £20 Amazon Voucher + First pick of next week's shifts!</p>
+        </div>
+
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            // Hide all tab content
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active state from all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+
+            // Add active state to clicked button
+            event.currentTarget.classList.add('active');
+        }
+    </script>
+</body>
+</html>
