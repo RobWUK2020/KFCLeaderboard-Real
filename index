@@ -51,7 +51,7 @@
 
         /* Header */
         header {
-            background-color: var(--kfc-black); /* Dark theme for Stranger Things vibe */
+            background-color: var(--kfc-black);
             color: var(--kfc-white);
             padding: 20px;
             text-align: center;
@@ -80,36 +80,6 @@
             margin-top: 5px;
         }
 
-        /* Navigation Tabs (Small Buttons) */
-        .tab-nav {
-            display: flex;
-            background-color: var(--kfc-white);
-            padding: 10px;
-            gap: 5px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 8px 4px;
-            font-size: 0.75rem; /* Small buttons */
-            font-weight: bold;
-            text-transform: uppercase;
-            border: 2px solid transparent;
-            border-radius: 4px;
-            background-color: var(--bg-light);
-            color: var(--text-gray);
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: center;
-        }
-
-        .tab-btn.active {
-            background-color: var(--kfc-red);
-            color: var(--kfc-white);
-            border-color: var(--kfc-dark-red);
-        }
-
         /* Main Content Area */
         main {
             padding: 15px;
@@ -117,18 +87,16 @@
             background-color: var(--bg-light);
         }
 
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.3s ease-in-out;
+        .metric-section {
+            margin-bottom: 35px; /* Adds space between the stacked leaderboards */
+            background-color: var(--bg-light);
+            padding-bottom: 20px;
+            border-bottom: 2px dashed #ccc;
         }
 
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
+        .metric-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
         }
 
         .section-title {
@@ -138,6 +106,11 @@
             margin-bottom: 15px;
             text-align: center;
             text-transform: uppercase;
+            background-color: var(--kfc-white);
+            padding: 10px;
+            border-radius: 6px;
+            border-left: 5px solid var(--kfc-red);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
         /* Leaderboard List Items */
@@ -171,7 +144,7 @@
 
         .rank-2 {
             border-left: 4px solid var(--kfc-red);
-            background-color: #fff9fa; /* Slight highlight for Patrick */
+            background-color: #fff9fa;
         }
 
         .team-member {
@@ -278,14 +251,8 @@
             <p>Demogorgon Bucket Weekly Tracker</p>
         </header>
 
-        <nav class="tab-nav">
-            <button class="tab-btn active" onclick="switchTab('tab-attachment')">Attach %</button>
-            <button class="tab-btn" onclick="switchTab('tab-volume')">Volume #</button>
-            <button class="tab-btn" onclick="switchTab('tab-shift')">Shift vs Shift</button>
-        </nav>
-
         <main>
-            <div id="tab-attachment" class="tab-content active">
+            <div class="metric-section">
                 <h2 class="section-title">Attachment Rate</h2>
                 <div class="leaderboard-list">
                     <div class="rank-card rank-1">
@@ -314,28 +281,10 @@
                         </div>
                         <div class="metric-score">11.0%</div>
                     </div>
-
-                    <div class="rank-card">
-                        <div class="rank-number">4</div>
-                        <div class="team-member">
-                            <h4>Emma White</h4>
-                            <p>Drive-Thru Window</p>
-                        </div>
-                        <div class="metric-score">9.5%</div>
-                    </div>
-
-                    <div class="rank-card">
-                        <div class="rank-number">5</div>
-                        <div class="team-member">
-                            <h4>James Lewis</h4>
-                            <p>Front Counter</p>
-                        </div>
-                        <div class="metric-score">8.8%</div>
-                    </div>
                 </div>
             </div>
 
-            <div id="tab-volume" class="tab-content">
+            <div class="metric-section">
                 <h2 class="section-title">Total Promo Volume</h2>
                 <div class="leaderboard-list">
                     <div class="rank-card rank-1">
@@ -364,28 +313,10 @@
                         </div>
                         <div class="metric-score">38</div>
                     </div>
-
-                    <div class="rank-card">
-                        <div class="rank-number">4</div>
-                        <div class="team-member">
-                            <h4>Emma White</h4>
-                            <p>Drive-Thru Window</p>
-                        </div>
-                        <div class="metric-score">31</div>
-                    </div>
-
-                    <div class="rank-card">
-                        <div class="rank-number">5</div>
-                        <div class="team-member">
-                            <h4>David Taylor</h4>
-                            <p>Front Counter</p>
-                        </div>
-                        <div class="metric-score">27</div>
-                    </div>
                 </div>
             </div>
 
-            <div id="tab-shift" class="tab-content">
+            <div class="metric-section">
                 <h2 class="section-title">Day vs Night Shift</h2>
                 <div class="vs-container">
                     
@@ -414,26 +345,5 @@
 
     </div>
 
-    <script>
-        function switchTab(tabId) {
-            // Hide all tab content
-            const contents = document.querySelectorAll('.tab-content');
-            contents.forEach(content => {
-                content.classList.remove('active');
-            });
-
-            // Remove active state from all buttons
-            const buttons = document.querySelectorAll('.tab-btn');
-            buttons.forEach(button => {
-                button.classList.remove('active');
-            });
-
-            // Show selected tab content
-            document.getElementById(tabId).classList.add('active');
-
-            // Add active state to clicked button
-            event.currentTarget.classList.add('active');
-        }
-    </script>
 </body>
 </html>
